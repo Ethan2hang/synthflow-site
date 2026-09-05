@@ -11,6 +11,7 @@
   --ink-3: #8d8b93;
   --line: #e6e5e9;
   --line-strong: #cfcdd4;
+  --hairline: #f0eff2;
   --violet: #7053a6;
   --violet-soft: #eee9f5;
   --wave: #7053a6;
@@ -31,6 +32,7 @@
   --ink-3: #918d95;
   --line: #3b3b41;
   --line-strong: #505057;
+  --hairline: #26262a;
   --violet: #9384a4;
   --violet-soft: rgba(147, 132, 164, 0.14);
   --wave: #9384a4;
@@ -66,8 +68,10 @@ svg { display: block; }
    everything hangs from. */
 .grid-lines { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 .grid-lines::before, .grid-lines::after {
-  content: ""; position: absolute; top: 0; bottom: 0; width: 1px; background: var(--line);
+  content: ""; position: absolute; top: 0; bottom: 0; width: 1px;
+  background: linear-gradient(to bottom, transparent 0, var(--hairline) 160px, var(--hairline) calc(100% - 160px), transparent 100%);
 }
+@media (max-width: 1180px) { .grid-lines { display: none; } }
 /* 28px outside the 1040px content column so type never touches them */
 .grid-lines::before { left: max(8px, calc(50% - 548px)); }
 .grid-lines::after { right: max(8px, calc(50% - 548px)); }
