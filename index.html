@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="robots" content="noindex" />  <!-- preview: remove before launch -->
 <title>SynthFlow — A synth you talk to</title>
-<meta name="description" content="SynthFlow turns a sentence into a playable wavetable preset, renders a preview you can hear in seconds, and keeps every version so you can refine without losing anything." />
+<meta name="description" content="SynthFlow turns text descriptions and reference audio into editable Vital presets you can refine, preview, and export." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600&display=swap" />
@@ -22,6 +21,7 @@
 </script>
 </head>
 <body>
+<div class="grid-lines" aria-hidden="true"></div>
 
 <header class="nav">
   <div class="wrap nav-inner">
@@ -31,9 +31,8 @@
     </a>
     <nav class="nav-links" aria-label="Sections">
       <a href="#how">How it works</a>
-      <a href="#showcase">What it understood</a>
       <a href="#audio">Audio to preset</a>
-      <a href="#engines">Engines</a>
+      <a href="#engines">Synth support</a>
       <a href="#spec">Specifications</a>
     </nav>
     <div class="nav-right">
@@ -49,9 +48,9 @@
 <main id="top">
   <!-- ============================== HERO ============================== -->
   <section class="hero wrap">
-    <div class="eyebrow">Text → preset → sound</div>
+    <div class="eyebrow">Text or audio → Vital preset</div>
     <h1 class="h1">A synth you talk to.</h1>
-    <p class="sub">SynthFlow turns a sentence into a playable wavetable preset, renders a preview you can hear in seconds, and keeps every version so you can refine without losing anything.</p>
+    <p class="sub">Describe a sound or upload a reference. SynthFlow turns either into a playable, editable Vital preset you can preview, refine in natural language, and keep developing without losing earlier versions.</p>
 
     <div class="composer">
       <div class="composer-label">Pick a sound to run it through the loop</div>
@@ -98,7 +97,7 @@
         <div class="playhead" id="playhead"></div>
       </div>
       <div class="params" id="params">
-        <div class="param" data-key="wavetable"><div class="param-k">Wavetable</div><div class="param-v">Analog Saw</div></div>
+        <div class="param" data-key="wavetable"><div class="param-k">Oscillator character</div><div class="param-v">Analog Saw</div></div>
         <div class="param" data-key="cutoff"><div class="param-k">Filter cutoff</div><div class="param-v">22</div></div>
         <div class="param" data-key="resonance"><div class="param-k">Filter resonance</div><div class="param-v">31%</div></div>
         <div class="param" data-key="attack"><div class="param-k">Amp EG attack</div><div class="param-v">Fast</div></div>
@@ -117,47 +116,19 @@
       </div>
       <div class="versions" id="versions" hidden></div>
     </div>
-    <p class="demo-note" id="demo-note">Every sound on this page was rendered by SynthFlow’s engine from the parameters shown. The page only plays the files.</p>
+    <p class="demo-note" id="demo-note">This interactive walkthrough uses pre-rendered audio to show the describe, preview, and refine workflow.</p>
   </section>
 
   <!-- ============================== HOW ============================== -->
   <section class="section wrap" id="how">
     <div class="reveal">
       <h2 class="h2">Three moves. No menus.</h2>
-      <p class="lede">Every stage is real: the planner maps your words to synth parameters, the engine renders an actual WAV, and each edit is stored as its own immutable version.</p>
+      <p class="lede">Start with words or reference audio, preview the resulting Vital preset, then refine it in natural language while keeping every version.</p>
     </div>
     <div class="steps">
-      <div class="step reveal"><div class="step-n">01</div><div class="step-h">Describe</div><p class="step-p">Type what you hear in your head, or drop a reference file. Keywords are pulled out so you can see how the sentence was read.</p></div>
-      <div class="step reveal"><div class="step-n">02</div><div class="step-h">Listen</div><p class="step-p">A rendered preview, not a mock-up. Play it, scrub it, download the WAV, and read the parameters that produced it.</p></div>
+      <div class="step reveal"><div class="step-n">01</div><div class="step-h">Describe</div><p class="step-p">Type what you hear in your head, or upload a reference sound for SynthFlow to analyze.</p></div>
+      <div class="step reveal"><div class="step-n">02</div><div class="step-h">Listen</div><p class="step-p">Hear a preview of the Vital preset, then open the instrument to inspect and edit the sound directly.</p></div>
       <div class="step reveal"><div class="step-n">03</div><div class="step-h">Refine</div><p class="step-p">Say “brighter” or “shorter attack”. Each change is a new snapshot; undo, redo and full history are always one click away.</p></div>
-    </div>
-  </section>
-
-  <!-- ============================== SHOWCASE ============================== -->
-  <section class="section wrap" id="showcase">
-    <div class="reveal">
-      <h2 class="h2">What it understood.</h2>
-      <p class="lede">Two longer briefs, straight from the planner: the sentence, what it read out of it, and the parameters it chose. Rendered by the same engine.</p>
-    </div>
-    <div class="cases">
-      <div class="case reveal" data-showcase="string-pad">
-        <p class="case-prompt">“A soft, slightly detuned pad that opens up slowly, like a string section warming up in a large hall.”</p>
-        <div class="case-chips chips"></div>
-        <div class="case-params mini"></div>
-        <button class="btn case-play" type="button" disabled>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"></path></svg>
-          <span>Open in the demo</span>
-        </button>
-      </div>
-      <div class="case reveal" data-showcase="woody-pluck">
-        <p class="case-prompt">“Hollow, woody pluck with a quick decay and a touch of chorus, sitting in the mids so it doesn’t fight the bass.”</p>
-        <div class="case-chips chips"></div>
-        <div class="case-params mini"></div>
-        <button class="btn case-play" type="button" disabled>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"></path></svg>
-          <span>Open in the demo</span>
-        </button>
-      </div>
     </div>
   </section>
 
@@ -166,18 +137,18 @@
     <div class="split">
       <div class="reveal">
         <h2 class="h2">Audio in, preset out.</h2>
-        <p class="lede">Drop a WAV you like. SynthFlow’s audio model estimates the filter and envelope settings behind it and hands you a preset you can keep editing in words.</p>
+        <p class="lede">Upload a reference sound. SynthFlow analyzes its timbre, oscillator character, filter, envelope, and modulation, then creates an editable Vital preset you can preview and keep refining in words.</p>
       </div>
       <div class="drop reveal">
         <div class="drop-row">
           <div class="file-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5"></path></svg></div>
           <div><div class="file-name">reference_pluck.wav</div><div class="file-meta">2.1 s · 48 kHz · stereo</div></div>
         </div>
-        <div class="arrow-row"><span>audio → parameters</span><div class="rule"></div><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg></div>
+        <div class="arrow-row"><span>reference audio → editable preset</span><div class="rule"></div><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg></div>
         <div class="mini">
-          <div class="param"><div class="param-k">Filter cutoff</div><div class="param-v">22</div></div>
-          <div class="param"><div class="param-k">Filter resonance</div><div class="param-v">31%</div></div>
-          <div class="param"><div class="param-k">Amp EG attack</div><div class="param-v">Fast</div></div>
+          <div class="param"><div class="param-k">Analyze</div><div class="param-v">Timbre + oscillator</div></div>
+          <div class="param"><div class="param-k">Shape</div><div class="param-v">Filter + modulation</div></div>
+          <div class="param"><div class="param-k">Output</div><div class="param-v">Editable Vital preset</div></div>
         </div>
       </div>
     </div>
@@ -186,13 +157,12 @@
   <!-- ============================== ENGINES ============================== -->
   <section class="section wrap" id="engines">
     <div class="reveal">
-      <h2 class="h2">Built for the synths you already use.</h2>
-      <p class="lede">Presets are generated against a real wavetable engine and exported to the instrument you open in your DAW.</p>
+      <h2 class="h2">Native presets for real instruments.</h2>
+      <p class="lede">SynthFlow works with real synth preset formats. Vital is supported today, with Serum 2 support in development.</p>
     </div>
     <div class="engines reveal">
-      <div class="engine"><div class="engine-name">Wavetable</div><div class="engine-stat">Built-in render engine</div><p class="engine-desc">Every preview you hear is rendered by SynthFlow’s own wavetable engine, so what you hear is what the preset is.</p></div>
-      <div class="engine"><div class="engine-name">Vital</div><div class="engine-stat">Export as .vital</div><p class="engine-desc">Open the preset in Vital with a single export. Parameter mapping is reported key by key so nothing is silently dropped.</p></div>
-      <div class="engine"><div class="engine-name">Serum 2</div><div class="engine-stat">In progress</div><p class="engine-desc">Serum 2 export is being built. Until it ships, the app says so plainly instead of pretending.</p></div>
+      <div class="engine"><div class="engine-name">Vital</div><div class="engine-stat">Available now</div><p class="engine-desc">SynthFlow loads the active preset into Vital inside the app, so you can hear and edit the real instrument as part of the same workflow.</p></div>
+      <div class="engine"><div class="engine-name">Serum 2</div><div class="engine-stat">In development</div><p class="engine-desc">We are building Serum 2 preset support, including preset decoding and parameter mapping. It is not yet available in the app.</p></div>
     </div>
   </section>
 
@@ -201,12 +171,12 @@
     <div class="spec">
       <div class="reveal"><h2 class="h2">Specifications</h2></div>
       <table class="reveal">
-        <tr><td class="k">Input</td><td>Text description · reference WAV</td></tr>
-        <tr><td class="k">Output</td><td>Preset snapshot · rendered WAV preview</td></tr>
-        <tr><td class="k">Render engine</td><td>Built-in wavetable synth</td></tr>
-        <tr><td class="k">Export</td><td>Vital (.vital) · Serum 2 in progress</td></tr>
-        <tr><td class="k">Audio to preset</td><td>Audio-to-parameter model, filter and envelope estimation</td></tr>
-        <tr><td class="k">History</td><td>Immutable versions, undo/redo, full project history</td></tr>
+        <tr><td class="k">Input</td><td>Text description · WAV, AIF, AIFF, FLAC, or MP3</td></tr>
+        <tr><td class="k">Output</td><td>Native Vital preset · preset snapshot · rendered WAV preview</td></tr>
+        <tr><td class="k">Render engine</td><td>Vital VST3 offline rendering</td></tr>
+        <tr><td class="k">Export</td><td>Vital (.vital) · preset data (.json)</td></tr>
+        <tr><td class="k">Audio to preset</td><td>Timbre, oscillator, filter, envelope, and modulation analysis</td></tr>
+        <tr><td class="k">History</td><td>Version history, undo, and redo</td></tr>
         <tr><td class="k">Platforms</td><td>[macOS / Windows — confirm]</td></tr>
       </table>
     </div>
@@ -224,7 +194,7 @@
     </form>
     <footer class="foot">
       <span>© 2026 SynthFlow</span>
-      <span><a href="#">[GitHub]</a> · <a href="#">[Contact]</a></span>
+      <span><a href="#">[Contact]</a></span>
     </footer>
   </section>
 </main>

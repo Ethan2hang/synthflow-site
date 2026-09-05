@@ -11,7 +11,6 @@
   --ink-3: #8d8b93;
   --line: #e6e5e9;
   --line-strong: #cfcdd4;
-  --hairline: #f0eff2;
   --violet: #7053a6;
   --violet-soft: #eee9f5;
   --wave: #7053a6;
@@ -32,7 +31,6 @@
   --ink-3: #918d95;
   --line: #3b3b41;
   --line-strong: #505057;
-  --hairline: #26262a;
   --violet: #9384a4;
   --violet-soft: rgba(147, 132, 164, 0.14);
   --wave: #9384a4;
@@ -61,9 +59,18 @@ button:focus-visible, a:focus-visible, textarea:focus-visible, input:focus-visib
 }
 svg { display: block; }
 
-.wrap { width: min(1120px, calc(100% - 64px)); margin: 0 auto; position: relative; }
+.wrap { width: min(1040px, calc(100% - 48px)); margin: 0 auto; position: relative; }
 .wrap-wide { width: min(1240px, calc(100% - 48px)); margin: 0 auto; }
 
+/* Hairline grid: two vertical rules that run the full page, the structure
+   everything hangs from. */
+.grid-lines { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.grid-lines::before, .grid-lines::after {
+  content: ""; position: absolute; top: 0; bottom: 0; width: 1px; background: var(--line);
+}
+/* 28px outside the 1040px content column so type never touches them */
+.grid-lines::before { left: max(8px, calc(50% - 548px)); }
+.grid-lines::after { right: max(8px, calc(50% - 548px)); }
 main, header, footer { position: relative; z-index: 1; }
 
 /* ---------- nav ---------- */
@@ -185,7 +192,7 @@ button.chip:hover { border-color: var(--line-strong); color: var(--ink); }
 .mini { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
 .mini .param { background: var(--bg); border: 0; }
 
-.engines { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin-top: 48px; }
+.engines { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin-top: 48px; }
 .engine { background: var(--bg); padding: 28px 28px 30px; }
 .engine-name { font-size: 20px; font-weight: 600; }
 .engine-stat { font-size: 13px; color: var(--ink-3); margin-top: 4px; }
@@ -205,14 +212,6 @@ button.chip:hover { border-color: var(--line-strong); color: var(--ink); }
 .cta-note { font-size: 13px; color: var(--ink-3); width: 100%; }
 .foot { display: flex; justify-content: space-between; align-items: center; padding: 64px 0 40px; font-size: 13px; color: var(--ink-3); gap: 16px; flex-wrap: wrap; }
 
-/* ---------- showcase ---------- */
-.cases { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; margin-top: 48px; }
-.case { border: 1px solid var(--line); border-radius: 14px; padding: 26px 26px 24px; background: var(--bg); display: flex; flex-direction: column; gap: 16px; }
-.case-prompt { font-family: var(--font-display); font-size: 22px; line-height: 1.3; letter-spacing: -0.015em; font-weight: 500; text-wrap: pretty; }
-.case .chips { margin-top: 0; }
-.case .mini { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.case .case-play { align-self: flex-start; }
-
 /* ---------- reveal on scroll ---------- */
 .js .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
 .js .reveal.in { opacity: 1; transform: none; }
@@ -230,7 +229,6 @@ button.chip:hover { border-color: var(--line-strong); color: var(--ink); }
   .param:nth-child(n + 5) { border-top: 1px solid var(--line); }
   .steps { grid-template-columns: 1fr; gap: 28px; }
   .split { grid-template-columns: 1fr; gap: 32px; }
-  .cases { grid-template-columns: 1fr; gap: 20px; }
   .engines { grid-template-columns: 1fr; }
   .spec { grid-template-columns: 1fr; gap: 24px; }
   .section { padding-top: 88px; }
@@ -238,6 +236,7 @@ button.chip:hover { border-color: var(--line-strong); color: var(--ink); }
 }
 @media (max-width: 600px) {
   .wrap, .wrap-wide { width: calc(100% - 32px); }
+  .grid-lines { display: none; }
   .composer { padding: 16px; }
   .result-head { flex-direction: column; align-items: stretch; }
   .result-actions { justify-content: flex-start; }

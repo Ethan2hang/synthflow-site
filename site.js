@@ -1,11 +1,6 @@
-// SynthFlow product site — a guided demo of the product loop:
-// pick a sound → (thinking, mapping, rendering) → hear → refine → versions.
-//
-// Every sound on the page was rendered by the SynthFlow backend from the
-// parameters shown (see backend/scripts/render_site_demo.py, which writes
-// site/demo/catalog.json and the audio files). The page only plays those
-// files: the waveform is drawn from the decoded samples, Play plays them,
-// Download saves them as WAV. Nothing is synthesized or invented here.
+// SynthFlow product site — an interactive walkthrough of the product loop:
+// choose an example → preview → refine → compare versions.
+// Demo audio is pre-rendered and loaded from demo/catalog.json.
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -40,7 +35,7 @@ const el = {
   play: $("#play-btn"), undo: $("#undo-btn"), download: $("#download-btn"),
   canvas: $("#wave-canvas"), waveStatic: $("#wave-static"), playhead: $("#playhead"),
   params: $$("#params .param"), refine: $$("#refine button"), versions: $("#versions"),
-  note: $("#refine-note"), demoNote: $("#demo-note"), showcase: $("#showcase"),
+  note: $("#refine-note"), demoNote: $("#demo-note"),
 };
 
 // ---------------------------------------------------------------- audio
@@ -94,8 +89,6 @@ function encodeWav(buffer) {
 }
 
 // ---------------------------------------------------------------- rendering UI
-const PARAM_KEYS = ["wavetable", "cutoff", "resonance", "attack", "decay", "stereo", "level"];
-
 function renderChips(items) {
   el.chips.innerHTML = "";
   items.forEach((k, i) => {
@@ -317,31 +310,6 @@ function typePrompt(text) {
   });
 }
 
-// ---------------------------------------------------------------- showcase
-function renderShowcase() {
-  if (!el.showcase) return;
-  $$("[data-showcase]", el.showcase).forEach((card) => {
-    const p = state.catalog.presets.find((x) => x.id === card.dataset.showcase);
-    if (!p) { card.hidden = true; return; }
-    $(".case-prompt", card).textContent = `“${p.prompt}”`;
-    const chips = $(".case-chips", card);
-    chips.innerHTML = "";
-    p.understood.forEach((k) => { const s = document.createElement("span"); s.className = "chip"; s.textContent = k; chips.appendChild(s); });
-    const rows = $(".case-params", card);
-    rows.innerHTML = "";
-    PARAM_KEYS.forEach((k) => {
-      const d = document.createElement("div"); d.className = "param";
-      d.innerHTML = `<div class="param-k"></div><div class="param-v"></div>`;
-      $(".param-k", d).textContent = $(`#params .param[data-key="${k}"] .param-k`).textContent;
-      $(".param-v", d).textContent = p.display[k];
-      rows.appendChild(d);
-    });
-    const btn = $(".case-play", card);
-    btn.disabled = false;
-    btn.addEventListener("click", () => { pick(p.id).then(() => { $("#result").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" }); }); });
-  });
-}
-
 // ---------------------------------------------------------------- wiring
 el.refine.forEach((b) => b.addEventListener("click", () => refine(b.dataset.refine)));
 el.play.addEventListener("click", play);
@@ -374,10 +342,6 @@ window.__synthflow = { state, pick, refine, play, showVersion };
     if (el.demoNote) el.demoNote.textContent = "Demo audio isn’t available in this build. [Run backend/scripts/render_site_demo.py.]";
     return;
   }
-  if (el.demoNote && state.catalog.engine) {
-    el.demoNote.textContent = `Every sound on this page was rendered by the ${state.catalog.engine}, from the parameters shown. The page only plays the files.`;
-  }
   renderPicker();
-  renderShowcase();
   await pick(state.catalog.presets[0].id);
 })();
