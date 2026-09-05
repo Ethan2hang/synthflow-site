@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />  <!-- preview: remove before launch -->
+<title>SynthFlow — A synth you talk to</title>
+<meta name="description" content="SynthFlow turns a sentence into a playable wavetable preset, renders a preview you can hear in seconds, and keeps every version so you can refine without losing anything." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600&display=swap" />
+<link rel="stylesheet" href="site.css" />
+<script>
+// Theme before first paint: saved choice, else the system preference.
+(function () {
+  var t = null;
+  try { t = localStorage.getItem("synthflow_site_theme"); } catch (e) {}
+  if (t !== "light" && t !== "dark") t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", t);
+  document.documentElement.classList.add("js");
+})();
+</script>
+</head>
+<body>
+<div class="grid-lines" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top" aria-label="SynthFlow home">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12c3-6 6-6 9 0s6 6 9 0"></path></svg>
+      <span>SynthFlow</span>
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#how">How it works</a>
+      <a href="#showcase">What it understood</a>
+      <a href="#audio">Audio to preset</a>
+      <a href="#engines">Engines</a>
+      <a href="#spec">Specifications</a>
+    </nav>
+    <div class="nav-right">
+      <button class="theme-btn" id="theme-btn" type="button" aria-label="Switch appearance">
+        <svg class="sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+        <svg class="moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"></path></svg>
+      </button>
+      <a class="btn btn-ink" href="#access">Get early access</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <!-- ============================== HERO ============================== -->
+  <section class="hero wrap">
+    <div class="eyebrow">Text → preset → sound</div>
+    <h1 class="h1">A synth you talk to.</h1>
+    <p class="sub">SynthFlow turns a sentence into a playable wavetable preset, renders a preview you can hear in seconds, and keeps every version so you can refine without losing anything.</p>
+
+    <div class="composer">
+      <div class="composer-label">Pick a sound to run it through the loop</div>
+      <div class="prompt" id="prompt" aria-live="polite">Warm analog bass with a controlled transient and spacious stereo width.</div>
+      <div class="chips" id="chips" aria-label="What the planner read"></div>
+      <div class="picker" id="picker" role="group" aria-label="Example sounds"></div>
+      <div class="composer-foot">
+        <span class="own">Want to type your own? That’s the app. <a href="#access">Get early access</a></span>
+      </div>
+    </div>
+
+    <div class="stages" id="stages" aria-label="Generation progress">
+      <div class="stage" data-stage="thinking"><span class="dot"></span><span class="label">Thinking</span></div><div class="rule"></div>
+      <div class="stage" data-stage="mapping"><span class="dot"></span><span class="label">Mapping</span></div><div class="rule"></div>
+      <div class="stage" data-stage="rendering"><span class="dot"></span><span class="label">Rendering</span></div><div class="rule"></div>
+      <div class="stage" data-stage="completed"><span class="dot"></span><span class="label">Completed</span></div>
+    </div>
+
+    <div class="result" id="result">
+      <div class="result-head">
+        <div class="result-title">
+          <div class="result-badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12c3-6 6-6 9 0s6 6 9 0"></path></svg></div>
+          <div>
+            <div class="result-name" id="result-name">Warm Analog Bass</div>
+            <div class="result-quote" id="result-quote">“Warm analog bass with a controlled transient and spacious stereo width.”</div>
+          </div>
+        </div>
+        <div class="result-actions">
+          <button class="btn" id="play-btn" type="button" disabled>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"></path></svg>
+            <span class="label">Play</span>
+          </button>
+          <button class="icon-btn" id="undo-btn" type="button" title="Undo" aria-label="Undo" disabled>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7 4 12l5 5M4 12h11a5 5 0 0 1 0 10h-1"></path></svg>
+          </button>
+          <button class="icon-btn" id="download-btn" type="button" title="Download WAV" aria-label="Download WAV" disabled>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M6 10l6 6 6-6M4 20h16"></path></svg>
+          </button>
+        </div>
+      </div>
+      <div class="result-wave">
+        <svg class="wave-static" id="wave-static" viewBox="0 0 1000 110" preserveAspectRatio="none" fill="var(--wave)" aria-hidden="true"><rect x="0.0" y="18.8" width="6.3" height="72.4" rx="1"></rect><rect x="8.3" y="18.3" width="6.3" height="73.4" rx="1"></rect><rect x="16.7" y="16.8" width="6.3" height="76.3" rx="1"></rect><rect x="25.0" y="23.8" width="6.3" height="62.3" rx="1"></rect><rect x="33.4" y="8.9" width="6.3" height="92.1" rx="1"></rect><rect x="41.8" y="6.3" width="6.3" height="97.4" rx="1"></rect><rect x="50.1" y="24.5" width="6.3" height="60.9" rx="1"></rect><rect x="58.4" y="10.2" width="6.3" height="89.5" rx="1"></rect><rect x="66.8" y="24.7" width="6.3" height="60.6" rx="1"></rect><rect x="75.1" y="22.5" width="6.3" height="65.0" rx="1"></rect><rect x="83.5" y="10.0" width="6.3" height="90.0" rx="1"></rect><rect x="91.8" y="21.9" width="6.3" height="66.2" rx="1"></rect><rect x="100.2" y="20.3" width="6.3" height="69.4" rx="1"></rect><rect x="108.5" y="20.7" width="6.3" height="68.6" rx="1"></rect><rect x="116.9" y="17.5" width="6.3" height="74.9" rx="1"></rect><rect x="125.3" y="15.3" width="6.3" height="79.4" rx="1"></rect><rect x="133.6" y="20.9" width="6.3" height="68.1" rx="1"></rect><rect x="141.9" y="19.5" width="6.3" height="71.0" rx="1"></rect><rect x="150.3" y="15.9" width="6.3" height="78.2" rx="1"></rect><rect x="158.7" y="21.8" width="6.3" height="66.4" rx="1"></rect><rect x="167.0" y="27.7" width="6.3" height="54.7" rx="1"></rect><rect x="175.3" y="15.8" width="6.3" height="78.4" rx="1"></rect><rect x="183.7" y="15.4" width="6.3" height="79.3" rx="1"></rect><rect x="192.0" y="30.3" width="6.3" height="49.5" rx="1"></rect><rect x="200.4" y="25.3" width="6.3" height="59.4" rx="1"></rect><rect x="208.8" y="29.0" width="6.3" height="52.0" rx="1"></rect><rect x="217.1" y="20.7" width="6.3" height="68.6" rx="1"></rect><rect x="225.4" y="31.0" width="6.3" height="48.1" rx="1"></rect><rect x="233.8" y="25.4" width="6.3" height="59.2" rx="1"></rect><rect x="242.1" y="15.3" width="6.3" height="79.5" rx="1"></rect><rect x="250.5" y="17.8" width="6.3" height="74.4" rx="1"></rect><rect x="258.8" y="19.6" width="6.3" height="70.8" rx="1"></rect><rect x="267.2" y="15.6" width="6.3" height="78.7" rx="1"></rect><rect x="275.6" y="32.4" width="6.3" height="45.2" rx="1"></rect><rect x="283.9" y="27.1" width="6.3" height="55.8" rx="1"></rect><rect x="292.3" y="20.2" width="6.3" height="69.7" rx="1"></rect><rect x="300.6" y="33.3" width="6.3" height="43.3" rx="1"></rect><rect x="308.9" y="30.4" width="6.3" height="49.1" rx="1"></rect><rect x="317.3" y="19.8" width="6.3" height="70.5" rx="1"></rect><rect x="325.6" y="31.6" width="6.3" height="46.9" rx="1"></rect><rect x="334.0" y="30.0" width="6.3" height="49.9" rx="1"></rect><rect x="342.3" y="20.6" width="6.3" height="68.8" rx="1"></rect><rect x="350.7" y="22.9" width="6.3" height="64.2" rx="1"></rect><rect x="359.1" y="20.2" width="6.3" height="69.6" rx="1"></rect><rect x="367.4" y="24.0" width="6.3" height="62.1" rx="1"></rect><rect x="375.8" y="33.3" width="6.3" height="43.5" rx="1"></rect><rect x="384.1" y="28.7" width="6.3" height="52.6" rx="1"></rect><rect x="392.4" y="26.9" width="6.3" height="56.2" rx="1"></rect><rect x="400.8" y="27.5" width="6.3" height="54.9" rx="1"></rect><rect x="409.1" y="30.2" width="6.3" height="49.6" rx="1"></rect><rect x="417.5" y="32.8" width="6.3" height="44.3" rx="1"></rect><rect x="425.8" y="27.7" width="6.3" height="54.7" rx="1"></rect><rect x="434.2" y="30.3" width="6.3" height="49.4" rx="1"></rect><rect x="442.5" y="36.5" width="6.3" height="37.0" rx="1"></rect><rect x="450.9" y="26.4" width="6.3" height="57.1" rx="1"></rect><rect x="459.3" y="35.6" width="6.3" height="38.8" rx="1"></rect><rect x="467.6" y="37.2" width="6.3" height="35.6" rx="1"></rect><rect x="475.9" y="28.2" width="6.3" height="53.6" rx="1"></rect><rect x="484.3" y="32.5" width="6.3" height="45.0" rx="1"></rect><rect x="492.6" y="30.2" width="6.3" height="49.5" rx="1"></rect><rect x="501.0" y="34.6" width="6.3" height="40.8" rx="1"></rect><rect x="509.3" y="25.2" width="6.3" height="59.6" rx="1"></rect><rect x="517.7" y="36.8" width="6.3" height="36.4" rx="1"></rect><rect x="526.0" y="36.7" width="6.3" height="36.6" rx="1"></rect><rect x="534.4" y="38.5" width="6.3" height="33.0" rx="1"></rect><rect x="542.8" y="32.5" width="6.3" height="44.9" rx="1"></rect><rect x="551.1" y="35.8" width="6.3" height="38.4" rx="1"></rect><rect x="559.4" y="35.4" width="6.3" height="39.2" rx="1"></rect><rect x="567.8" y="30.5" width="6.3" height="49.0" rx="1"></rect><rect x="576.1" y="33.5" width="6.3" height="43.1" rx="1"></rect><rect x="584.5" y="37.5" width="6.3" height="35.0" rx="1"></rect><rect x="592.9" y="33.5" width="6.3" height="42.9" rx="1"></rect><rect x="601.2" y="37.9" width="6.3" height="34.1" rx="1"></rect><rect x="609.5" y="33.0" width="6.3" height="43.9" rx="1"></rect><rect x="617.9" y="36.0" width="6.3" height="38.0" rx="1"></rect><rect x="626.3" y="39.0" width="6.3" height="32.1" rx="1"></rect><rect x="634.6" y="40.1" width="6.3" height="29.9" rx="1"></rect><rect x="642.9" y="33.0" width="6.3" height="44.0" rx="1"></rect><rect x="651.3" y="30.0" width="6.3" height="50.0" rx="1"></rect><rect x="659.6" y="41.0" width="6.3" height="28.1" rx="1"></rect><rect x="668.0" y="38.5" width="6.3" height="32.9" rx="1"></rect><rect x="676.4" y="37.5" width="6.3" height="35.0" rx="1"></rect><rect x="684.7" y="33.0" width="6.3" height="44.0" rx="1"></rect><rect x="693.0" y="38.1" width="6.3" height="33.8" rx="1"></rect><rect x="701.4" y="38.5" width="6.3" height="32.9" rx="1"></rect><rect x="709.8" y="31.8" width="6.3" height="46.5" rx="1"></rect><rect x="718.1" y="36.4" width="6.3" height="37.1" rx="1"></rect><rect x="726.4" y="35.0" width="6.3" height="39.9" rx="1"></rect><rect x="734.8" y="33.8" width="6.3" height="42.4" rx="1"></rect><rect x="743.1" y="42.2" width="6.3" height="25.5" rx="1"></rect><rect x="751.5" y="36.2" width="6.3" height="37.6" rx="1"></rect><rect x="759.9" y="39.0" width="6.3" height="32.0" rx="1"></rect><rect x="768.2" y="41.3" width="6.3" height="27.3" rx="1"></rect><rect x="776.5" y="39.3" width="6.3" height="31.4" rx="1"></rect><rect x="784.9" y="34.5" width="6.3" height="41.0" rx="1"></rect><rect x="793.3" y="38.7" width="6.3" height="32.7" rx="1"></rect><rect x="801.6" y="34.3" width="6.3" height="41.3" rx="1"></rect><rect x="809.9" y="37.8" width="6.3" height="34.5" rx="1"></rect><rect x="818.3" y="35.2" width="6.3" height="39.6" rx="1"></rect><rect x="826.6" y="41.7" width="6.3" height="26.7" rx="1"></rect><rect x="835.0" y="38.3" width="6.3" height="33.3" rx="1"></rect><rect x="843.3" y="39.9" width="6.3" height="30.2" rx="1"></rect><rect x="851.7" y="43.1" width="6.3" height="23.8" rx="1"></rect><rect x="860.0" y="38.2" width="6.3" height="33.7" rx="1"></rect><rect x="868.4" y="41.4" width="6.3" height="27.1" rx="1"></rect><rect x="876.8" y="42.4" width="6.3" height="25.3" rx="1"></rect><rect x="885.1" y="40.0" width="6.3" height="29.9" rx="1"></rect><rect x="893.4" y="39.0" width="6.3" height="32.1" rx="1"></rect><rect x="901.8" y="40.7" width="6.3" height="28.6" rx="1"></rect><rect x="910.1" y="39.7" width="6.3" height="30.5" rx="1"></rect><rect x="918.5" y="37.5" width="6.3" height="35.0" rx="1"></rect><rect x="926.8" y="39.9" width="6.3" height="30.2" rx="1"></rect><rect x="935.2" y="40.7" width="6.3" height="28.7" rx="1"></rect><rect x="943.5" y="44.4" width="6.3" height="21.1" rx="1"></rect><rect x="951.9" y="39.2" width="6.3" height="31.6" rx="1"></rect><rect x="960.3" y="39.8" width="6.3" height="30.3" rx="1"></rect><rect x="968.6" y="39.8" width="6.3" height="30.4" rx="1"></rect><rect x="976.9" y="44.2" width="6.3" height="21.5" rx="1"></rect><rect x="985.3" y="42.4" width="6.3" height="25.2" rx="1"></rect><rect x="993.6" y="43.1" width="6.3" height="23.8" rx="1"></rect></svg>
+        <canvas id="wave-canvas" hidden aria-label="Waveform of the rendered preview"></canvas>
+        <div class="playhead" id="playhead"></div>
+      </div>
+      <div class="params" id="params">
+        <div class="param" data-key="wavetable"><div class="param-k">Wavetable</div><div class="param-v">Analog Saw</div></div>
+        <div class="param" data-key="cutoff"><div class="param-k">Filter cutoff</div><div class="param-v">22</div></div>
+        <div class="param" data-key="resonance"><div class="param-k">Filter resonance</div><div class="param-v">31%</div></div>
+        <div class="param" data-key="attack"><div class="param-k">Amp EG attack</div><div class="param-v">Fast</div></div>
+        <div class="param" data-key="decay"><div class="param-k">Amp EG decay</div><div class="param-v">Medium</div></div>
+        <div class="param" data-key="stereo"><div class="param-k">Stereo width</div><div class="param-v">45%</div></div>
+        <div class="param" data-key="level"><div class="param-k">Output level</div><div class="param-v">−6.0 dB</div></div>
+      </div>
+      <div class="refine" id="refine">
+        <span class="refine-label">Refine</span>
+        <button class="chip" type="button" data-refine="brighter" disabled>Brighter</button>
+        <button class="chip" type="button" data-refine="wider" disabled>Wider</button>
+        <button class="chip" type="button" data-refine="shorter-attack" disabled>Shorter attack</button>
+        <button class="chip" type="button" data-refine="more-analog" disabled>More analog</button>
+        <button class="chip" type="button" data-refine="less-harsh" disabled>Less harsh</button>
+        <span class="refine-note" id="refine-note" role="status" hidden></span>
+      </div>
+      <div class="versions" id="versions" hidden></div>
+    </div>
+    <p class="demo-note" id="demo-note">Every sound on this page was rendered by SynthFlow’s engine from the parameters shown. The page only plays the files.</p>
+  </section>
+
+  <!-- ============================== HOW ============================== -->
+  <section class="section wrap" id="how">
+    <div class="reveal">
+      <h2 class="h2">Three moves. No menus.</h2>
+      <p class="lede">Every stage is real: the planner maps your words to synth parameters, the engine renders an actual WAV, and each edit is stored as its own immutable version.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><div class="step-n">01</div><div class="step-h">Describe</div><p class="step-p">Type what you hear in your head, or drop a reference file. Keywords are pulled out so you can see how the sentence was read.</p></div>
+      <div class="step reveal"><div class="step-n">02</div><div class="step-h">Listen</div><p class="step-p">A rendered preview, not a mock-up. Play it, scrub it, download the WAV, and read the parameters that produced it.</p></div>
+      <div class="step reveal"><div class="step-n">03</div><div class="step-h">Refine</div><p class="step-p">Say “brighter” or “shorter attack”. Each change is a new snapshot; undo, redo and full history are always one click away.</p></div>
+    </div>
+  </section>
+
+  <!-- ============================== SHOWCASE ============================== -->
+  <section class="section wrap" id="showcase">
+    <div class="reveal">
+      <h2 class="h2">What it understood.</h2>
+      <p class="lede">Two longer briefs, straight from the planner: the sentence, what it read out of it, and the parameters it chose. Rendered by the same engine.</p>
+    </div>
+    <div class="cases">
+      <div class="case reveal" data-showcase="string-pad">
+        <p class="case-prompt">“A soft, slightly detuned pad that opens up slowly, like a string section warming up in a large hall.”</p>
+        <div class="case-chips chips"></div>
+        <div class="case-params mini"></div>
+        <button class="btn case-play" type="button" disabled>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"></path></svg>
+          <span>Open in the demo</span>
+        </button>
+      </div>
+      <div class="case reveal" data-showcase="woody-pluck">
+        <p class="case-prompt">“Hollow, woody pluck with a quick decay and a touch of chorus, sitting in the mids so it doesn’t fight the bass.”</p>
+        <div class="case-chips chips"></div>
+        <div class="case-params mini"></div>
+        <button class="btn case-play" type="button" disabled>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"></path></svg>
+          <span>Open in the demo</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== AUDIO ============================== -->
+  <section class="section wrap" id="audio">
+    <div class="split">
+      <div class="reveal">
+        <h2 class="h2">Audio in, preset out.</h2>
+        <p class="lede">Drop a WAV you like. SynthFlow’s audio model estimates the filter and envelope settings behind it and hands you a preset you can keep editing in words.</p>
+      </div>
+      <div class="drop reveal">
+        <div class="drop-row">
+          <div class="file-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5"></path></svg></div>
+          <div><div class="file-name">reference_pluck.wav</div><div class="file-meta">2.1 s · 48 kHz · stereo</div></div>
+        </div>
+        <div class="arrow-row"><span>audio → parameters</span><div class="rule"></div><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg></div>
+        <div class="mini">
+          <div class="param"><div class="param-k">Filter cutoff</div><div class="param-v">22</div></div>
+          <div class="param"><div class="param-k">Filter resonance</div><div class="param-v">31%</div></div>
+          <div class="param"><div class="param-k">Amp EG attack</div><div class="param-v">Fast</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== ENGINES ============================== -->
+  <section class="section wrap" id="engines">
+    <div class="reveal">
+      <h2 class="h2">Built for the synths you already use.</h2>
+      <p class="lede">Presets are generated against a real wavetable engine and exported to the instrument you open in your DAW.</p>
+    </div>
+    <div class="engines reveal">
+      <div class="engine"><div class="engine-name">Wavetable</div><div class="engine-stat">Built-in render engine</div><p class="engine-desc">Every preview you hear is rendered by SynthFlow’s own wavetable engine, so what you hear is what the preset is.</p></div>
+      <div class="engine"><div class="engine-name">Vital</div><div class="engine-stat">Export as .vital</div><p class="engine-desc">Open the preset in Vital with a single export. Parameter mapping is reported key by key so nothing is silently dropped.</p></div>
+      <div class="engine"><div class="engine-name">Serum 2</div><div class="engine-stat">In progress</div><p class="engine-desc">Serum 2 export is being built. Until it ships, the app says so plainly instead of pretending.</p></div>
+    </div>
+  </section>
+
+  <!-- ============================== SPEC ============================== -->
+  <section class="section wrap" id="spec">
+    <div class="spec">
+      <div class="reveal"><h2 class="h2">Specifications</h2></div>
+      <table class="reveal">
+        <tr><td class="k">Input</td><td>Text description · reference WAV</td></tr>
+        <tr><td class="k">Output</td><td>Preset snapshot · rendered WAV preview</td></tr>
+        <tr><td class="k">Render engine</td><td>Built-in wavetable synth</td></tr>
+        <tr><td class="k">Export</td><td>Vital (.vital) · Serum 2 in progress</td></tr>
+        <tr><td class="k">Audio to preset</td><td>Audio-to-parameter model, filter and envelope estimation</td></tr>
+        <tr><td class="k">History</td><td>Immutable versions, undo/redo, full project history</td></tr>
+        <tr><td class="k">Platforms</td><td>[macOS / Windows — confirm]</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================== CTA ============================== -->
+  <section class="wrap" id="access">
+    <form class="cta reveal" id="cta-form">
+      <h2 class="cta-h">Start with a sound in your head.</h2>
+      <div class="cta-form">
+        <input class="input" type="email" name="email" placeholder="you@studio.com" autocomplete="email" required />
+        <button class="btn btn-ink" type="submit">Get early access</button>
+        <span class="cta-note" id="cta-note"></span>
+      </div>
+    </form>
+    <footer class="foot">
+      <span>© 2026 SynthFlow</span>
+      <span><a href="#">[GitHub]</a> · <a href="#">[Contact]</a></span>
+    </footer>
+  </section>
+</main>
+
+<script type="module" src="site.js"></script>
+</body>
+</html>

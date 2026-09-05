@@ -1,0 +1,852 @@
+{
+  "engine": "SynthFlow engine, offline render via AISynth FM2.vst3",
+  "plugins": [
+    "AISynth FM2.vst3"
+  ],
+  "planner": "claude",
+  "rendered_at": "2026-09-02",
+  "presets": [
+    {
+      "id": "warm-analog-bass",
+      "prompt": "Warm analog bass with a controlled transient and spacious stereo width.",
+      "name": "Warm Analog Bass",
+      "understood": [
+        "synth",
+        "analog saw",
+        "warm",
+        "attack fast",
+        "decay medium"
+      ],
+      "display": {
+        "wavetable": "Analog Saw",
+        "cutoff": "22",
+        "resonance": "31%",
+        "attack": "Fast",
+        "decay": "Medium",
+        "stereo": "45%",
+        "level": "−6.0 dB"
+      },
+      "audio": "demo/warm-analog-bass.m4a",
+      "refines": {
+        "brighter": {
+          "label": "brighter",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "38",
+            "resonance": "31%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "filter cutoff 22 → 38"
+          ],
+          "audio": "demo/warm-analog-bass.brighter.m4a"
+        },
+        "wider": {
+          "label": "wider",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "22",
+            "resonance": "31%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "75%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "stereo width 45% → 75%"
+          ],
+          "audio": "demo/warm-analog-bass.wider.m4a"
+        },
+        "shorter-attack": {
+          "label": "shorter attack",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "22",
+            "resonance": "31%",
+            "attack": "Fast",
+            "decay": "Short",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "amp EG decay Medium → Short"
+          ],
+          "audio": "demo/warm-analog-bass.shorter-attack.m4a"
+        },
+        "more-analog": {
+          "label": "more analog",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "22",
+            "resonance": "21%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "filter resonance 31% → 21%"
+          ],
+          "audio": "demo/warm-analog-bass.more-analog.m4a"
+        },
+        "less-harsh": {
+          "label": "less harsh",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "10",
+            "resonance": "16%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "filter cutoff 22 → 10",
+            "filter resonance 31% → 16%"
+          ],
+          "audio": "demo/warm-analog-bass.less-harsh.m4a"
+        }
+      }
+    },
+    {
+      "id": "glassy-bell",
+      "prompt": "Glassy bell, bright and metallic, with a long release.",
+      "name": "Glassy Bell",
+      "understood": [
+        "synth",
+        "analog saw",
+        "warm",
+        "attack fast",
+        "decay medium"
+      ],
+      "display": {
+        "wavetable": "Analog Saw",
+        "cutoff": "22",
+        "resonance": "31%",
+        "attack": "Fast",
+        "decay": "Medium",
+        "stereo": "45%",
+        "level": "−6.0 dB"
+      },
+      "audio": "demo/glassy-bell.m4a",
+      "refines": {
+        "brighter": {
+          "label": "brighter",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "38",
+            "resonance": "31%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "filter cutoff 22 → 38"
+          ],
+          "audio": "demo/glassy-bell.brighter.m4a"
+        },
+        "wider": {
+          "label": "wider",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "22",
+            "resonance": "31%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "75%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "stereo width 45% → 75%"
+          ],
+          "audio": "demo/glassy-bell.wider.m4a"
+        },
+        "shorter-attack": {
+          "label": "shorter attack",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "22",
+            "resonance": "31%",
+            "attack": "Fast",
+            "decay": "Short",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "amp EG decay Medium → Short"
+          ],
+          "audio": "demo/glassy-bell.shorter-attack.m4a"
+        },
+        "more-analog": {
+          "label": "more analog",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "22",
+            "resonance": "21%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "filter resonance 31% → 21%"
+          ],
+          "audio": "demo/glassy-bell.more-analog.m4a"
+        },
+        "less-harsh": {
+          "label": "less harsh",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "10",
+            "resonance": "16%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "filter cutoff 22 → 10",
+            "filter resonance 31% → 16%"
+          ],
+          "audio": "demo/glassy-bell.less-harsh.m4a"
+        }
+      }
+    },
+    {
+      "id": "cinematic-pad",
+      "prompt": "Cinematic ambient pad, dark and wide, with a slow attack.",
+      "name": "Cinematic Pad",
+      "understood": [
+        "pad",
+        "string pad",
+        "warm",
+        "attack slow",
+        "decay long",
+        "wide"
+      ],
+      "display": {
+        "wavetable": "String Pad",
+        "cutoff": "28",
+        "resonance": "10%",
+        "attack": "Slow",
+        "decay": "Long",
+        "stereo": "70%",
+        "level": "−9.0 dB"
+      },
+      "audio": "demo/cinematic-pad.m4a",
+      "refines": {
+        "brighter": {
+          "label": "brighter",
+          "display": {
+            "wavetable": "String Pad",
+            "cutoff": "44",
+            "resonance": "10%",
+            "attack": "Slow",
+            "decay": "Long",
+            "stereo": "70%",
+            "level": "−9.0 dB"
+          },
+          "diff": [
+            "filter cutoff 28 → 44"
+          ],
+          "audio": "demo/cinematic-pad.brighter.m4a"
+        },
+        "wider": {
+          "label": "wider",
+          "display": {
+            "wavetable": "String Pad",
+            "cutoff": "28",
+            "resonance": "10%",
+            "attack": "Slow",
+            "decay": "Long",
+            "stereo": "100%",
+            "level": "−9.0 dB"
+          },
+          "diff": [
+            "stereo width 70% → 100%"
+          ],
+          "audio": "demo/cinematic-pad.wider.m4a"
+        },
+        "shorter-attack": {
+          "label": "shorter attack",
+          "display": {
+            "wavetable": "String Pad",
+            "cutoff": "28",
+            "resonance": "10%",
+            "attack": "Fast",
+            "decay": "Long",
+            "stereo": "70%",
+            "level": "−9.0 dB"
+          },
+          "diff": [
+            "amp EG attack Slow → Fast"
+          ],
+          "audio": "demo/cinematic-pad.shorter-attack.m4a"
+        },
+        "more-analog": {
+          "label": "more analog",
+          "display": {
+            "wavetable": "String Pad",
+            "cutoff": "28",
+            "resonance": "0%",
+            "attack": "Slow",
+            "decay": "Long",
+            "stereo": "70%",
+            "level": "−9.0 dB"
+          },
+          "diff": [
+            "filter resonance 10% → 0%"
+          ],
+          "audio": "demo/cinematic-pad.more-analog.m4a"
+        },
+        "less-harsh": {
+          "label": "less harsh",
+          "display": {
+            "wavetable": "String Pad",
+            "cutoff": "16",
+            "resonance": "0%",
+            "attack": "Slow",
+            "decay": "Long",
+            "stereo": "70%",
+            "level": "−9.0 dB"
+          },
+          "diff": [
+            "filter cutoff 28 → 16",
+            "filter resonance 10% → 0%"
+          ],
+          "audio": "demo/cinematic-pad.less-harsh.m4a"
+        }
+      }
+    },
+    {
+      "id": "plucky-keys",
+      "prompt": "Plucky electric keys, short and percussive, slightly detuned.",
+      "name": "Plucky Keys",
+      "understood": [
+        "synth",
+        "analog saw",
+        "warm",
+        "attack fast",
+        "decay medium"
+      ],
+      "display": {
+        "wavetable": "Analog Saw",
+        "cutoff": "22",
+        "resonance": "31%",
+        "attack": "Fast",
+        "decay": "Medium",
+        "stereo": "45%",
+        "level": "−6.0 dB"
+      },
+      "audio": "demo/plucky-keys.m4a",
+      "refines": {
+        "brighter": {
+          "label": "brighter",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "38",
+            "resonance": "31%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "filter cutoff 22 → 38"
+          ],
+          "audio": "demo/plucky-keys.brighter.m4a"
+        },
+        "wider": {
+          "label": "wider",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "22",
+            "resonance": "31%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "75%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "stereo width 45% → 75%"
+          ],
+          "audio": "demo/plucky-keys.wider.m4a"
+        },
+        "shorter-attack": {
+          "label": "shorter attack",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "22",
+            "resonance": "31%",
+            "attack": "Fast",
+            "decay": "Short",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "amp EG decay Medium → Short"
+          ],
+          "audio": "demo/plucky-keys.shorter-attack.m4a"
+        },
+        "more-analog": {
+          "label": "more analog",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "22",
+            "resonance": "21%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "filter resonance 31% → 21%"
+          ],
+          "audio": "demo/plucky-keys.more-analog.m4a"
+        },
+        "less-harsh": {
+          "label": "less harsh",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "10",
+            "resonance": "16%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "filter cutoff 22 → 10",
+            "filter resonance 31% → 16%"
+          ],
+          "audio": "demo/plucky-keys.less-harsh.m4a"
+        }
+      }
+    },
+    {
+      "id": "aggressive-lead",
+      "prompt": "Aggressive lead with a screaming resonant filter and a fast attack.",
+      "name": "Aggressive Lead",
+      "understood": [
+        "synth",
+        "analog saw",
+        "warm",
+        "attack fast",
+        "decay medium"
+      ],
+      "display": {
+        "wavetable": "Analog Saw",
+        "cutoff": "22",
+        "resonance": "31%",
+        "attack": "Fast",
+        "decay": "Medium",
+        "stereo": "45%",
+        "level": "−6.0 dB"
+      },
+      "audio": "demo/aggressive-lead.m4a",
+      "refines": {
+        "brighter": {
+          "label": "brighter",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "38",
+            "resonance": "31%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "filter cutoff 22 → 38"
+          ],
+          "audio": "demo/aggressive-lead.brighter.m4a"
+        },
+        "wider": {
+          "label": "wider",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "22",
+            "resonance": "31%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "75%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "stereo width 45% → 75%"
+          ],
+          "audio": "demo/aggressive-lead.wider.m4a"
+        },
+        "shorter-attack": {
+          "label": "shorter attack",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "22",
+            "resonance": "31%",
+            "attack": "Fast",
+            "decay": "Short",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "amp EG decay Medium → Short"
+          ],
+          "audio": "demo/aggressive-lead.shorter-attack.m4a"
+        },
+        "more-analog": {
+          "label": "more analog",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "22",
+            "resonance": "21%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "filter resonance 31% → 21%"
+          ],
+          "audio": "demo/aggressive-lead.more-analog.m4a"
+        },
+        "less-harsh": {
+          "label": "less harsh",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "10",
+            "resonance": "16%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "filter cutoff 22 → 10",
+            "filter resonance 31% → 16%"
+          ],
+          "audio": "demo/aggressive-lead.less-harsh.m4a"
+        }
+      }
+    },
+    {
+      "id": "sub-bass",
+      "prompt": "Deep clean sub bass, mono, nothing above the fundamental.",
+      "name": "Sub Bass",
+      "understood": [
+        "synth",
+        "analog saw",
+        "warm",
+        "attack fast",
+        "decay medium"
+      ],
+      "display": {
+        "wavetable": "Analog Saw",
+        "cutoff": "22",
+        "resonance": "31%",
+        "attack": "Fast",
+        "decay": "Medium",
+        "stereo": "45%",
+        "level": "−6.0 dB"
+      },
+      "audio": "demo/sub-bass.m4a",
+      "refines": {
+        "brighter": {
+          "label": "brighter",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "38",
+            "resonance": "31%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "filter cutoff 22 → 38"
+          ],
+          "audio": "demo/sub-bass.brighter.m4a"
+        },
+        "wider": {
+          "label": "wider",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "22",
+            "resonance": "31%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "75%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "stereo width 45% → 75%"
+          ],
+          "audio": "demo/sub-bass.wider.m4a"
+        },
+        "shorter-attack": {
+          "label": "shorter attack",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "22",
+            "resonance": "31%",
+            "attack": "Fast",
+            "decay": "Short",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "amp EG decay Medium → Short"
+          ],
+          "audio": "demo/sub-bass.shorter-attack.m4a"
+        },
+        "more-analog": {
+          "label": "more analog",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "22",
+            "resonance": "21%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "filter resonance 31% → 21%"
+          ],
+          "audio": "demo/sub-bass.more-analog.m4a"
+        },
+        "less-harsh": {
+          "label": "less harsh",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "10",
+            "resonance": "16%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "filter cutoff 22 → 10",
+            "filter resonance 31% → 16%"
+          ],
+          "audio": "demo/sub-bass.less-harsh.m4a"
+        }
+      }
+    },
+    {
+      "id": "string-pad",
+      "prompt": "A soft, slightly detuned pad that opens up slowly, like a string section warming up in a large hall.",
+      "name": "String Pad",
+      "understood": [
+        "pad",
+        "string pad",
+        "warm",
+        "attack slow",
+        "decay long",
+        "wide"
+      ],
+      "display": {
+        "wavetable": "String Pad",
+        "cutoff": "28",
+        "resonance": "10%",
+        "attack": "Slow",
+        "decay": "Long",
+        "stereo": "70%",
+        "level": "−9.0 dB"
+      },
+      "audio": "demo/string-pad.m4a",
+      "refines": {
+        "brighter": {
+          "label": "brighter",
+          "display": {
+            "wavetable": "String Pad",
+            "cutoff": "44",
+            "resonance": "10%",
+            "attack": "Slow",
+            "decay": "Long",
+            "stereo": "70%",
+            "level": "−9.0 dB"
+          },
+          "diff": [
+            "filter cutoff 28 → 44"
+          ],
+          "audio": "demo/string-pad.brighter.m4a"
+        },
+        "wider": {
+          "label": "wider",
+          "display": {
+            "wavetable": "String Pad",
+            "cutoff": "28",
+            "resonance": "10%",
+            "attack": "Slow",
+            "decay": "Long",
+            "stereo": "100%",
+            "level": "−9.0 dB"
+          },
+          "diff": [
+            "stereo width 70% → 100%"
+          ],
+          "audio": "demo/string-pad.wider.m4a"
+        },
+        "shorter-attack": {
+          "label": "shorter attack",
+          "display": {
+            "wavetable": "String Pad",
+            "cutoff": "28",
+            "resonance": "10%",
+            "attack": "Fast",
+            "decay": "Long",
+            "stereo": "70%",
+            "level": "−9.0 dB"
+          },
+          "diff": [
+            "amp EG attack Slow → Fast"
+          ],
+          "audio": "demo/string-pad.shorter-attack.m4a"
+        },
+        "more-analog": {
+          "label": "more analog",
+          "display": {
+            "wavetable": "String Pad",
+            "cutoff": "28",
+            "resonance": "0%",
+            "attack": "Slow",
+            "decay": "Long",
+            "stereo": "70%",
+            "level": "−9.0 dB"
+          },
+          "diff": [
+            "filter resonance 10% → 0%"
+          ],
+          "audio": "demo/string-pad.more-analog.m4a"
+        },
+        "less-harsh": {
+          "label": "less harsh",
+          "display": {
+            "wavetable": "String Pad",
+            "cutoff": "16",
+            "resonance": "0%",
+            "attack": "Slow",
+            "decay": "Long",
+            "stereo": "70%",
+            "level": "−9.0 dB"
+          },
+          "diff": [
+            "filter cutoff 28 → 16",
+            "filter resonance 10% → 0%"
+          ],
+          "audio": "demo/string-pad.less-harsh.m4a"
+        }
+      }
+    },
+    {
+      "id": "woody-pluck",
+      "prompt": "Hollow, woody pluck with a quick decay and a touch of chorus, sitting in the mids so it doesn't fight the bass.",
+      "name": "Woody Pluck",
+      "understood": [
+        "synth",
+        "analog saw",
+        "warm",
+        "attack fast",
+        "decay medium"
+      ],
+      "display": {
+        "wavetable": "Analog Saw",
+        "cutoff": "22",
+        "resonance": "31%",
+        "attack": "Fast",
+        "decay": "Medium",
+        "stereo": "45%",
+        "level": "−6.0 dB"
+      },
+      "audio": "demo/woody-pluck.m4a",
+      "refines": {
+        "brighter": {
+          "label": "brighter",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "38",
+            "resonance": "31%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "filter cutoff 22 → 38"
+          ],
+          "audio": "demo/woody-pluck.brighter.m4a"
+        },
+        "wider": {
+          "label": "wider",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "22",
+            "resonance": "31%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "75%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "stereo width 45% → 75%"
+          ],
+          "audio": "demo/woody-pluck.wider.m4a"
+        },
+        "shorter-attack": {
+          "label": "shorter attack",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "22",
+            "resonance": "31%",
+            "attack": "Fast",
+            "decay": "Short",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "amp EG decay Medium → Short"
+          ],
+          "audio": "demo/woody-pluck.shorter-attack.m4a"
+        },
+        "more-analog": {
+          "label": "more analog",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "22",
+            "resonance": "21%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "filter resonance 31% → 21%"
+          ],
+          "audio": "demo/woody-pluck.more-analog.m4a"
+        },
+        "less-harsh": {
+          "label": "less harsh",
+          "display": {
+            "wavetable": "Analog Saw",
+            "cutoff": "10",
+            "resonance": "16%",
+            "attack": "Fast",
+            "decay": "Medium",
+            "stereo": "45%",
+            "level": "−6.0 dB"
+          },
+          "diff": [
+            "filter cutoff 22 → 10",
+            "filter resonance 31% → 16%"
+          ],
+          "audio": "demo/woody-pluck.less-harsh.m4a"
+        }
+      }
+    }
+  ]
+}
