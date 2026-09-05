@@ -61,20 +61,9 @@ button:focus-visible, a:focus-visible, textarea:focus-visible, input:focus-visib
 }
 svg { display: block; }
 
-.wrap { width: min(1040px, calc(100% - 48px)); margin: 0 auto; position: relative; }
+.wrap { width: min(1120px, calc(100% - 64px)); margin: 0 auto; position: relative; }
 .wrap-wide { width: min(1240px, calc(100% - 48px)); margin: 0 auto; }
 
-/* Hairline grid: two vertical rules that run the full page, the structure
-   everything hangs from. */
-.grid-lines { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
-.grid-lines::before, .grid-lines::after {
-  content: ""; position: absolute; top: 0; bottom: 0; width: 1px;
-  background: linear-gradient(to bottom, transparent 0, var(--hairline) 160px, var(--hairline) calc(100% - 160px), transparent 100%);
-}
-@media (max-width: 1180px) { .grid-lines { display: none; } }
-/* 28px outside the 1040px content column so type never touches them */
-.grid-lines::before { left: max(8px, calc(50% - 548px)); }
-.grid-lines::after { right: max(8px, calc(50% - 548px)); }
 main, header, footer { position: relative; z-index: 1; }
 
 /* ---------- nav ---------- */
@@ -249,7 +238,6 @@ button.chip:hover { border-color: var(--line-strong); color: var(--ink); }
 }
 @media (max-width: 600px) {
   .wrap, .wrap-wide { width: calc(100% - 32px); }
-  .grid-lines { display: none; }
   .composer { padding: 16px; }
   .result-head { flex-direction: column; align-items: stretch; }
   .result-actions { justify-content: flex-start; }
