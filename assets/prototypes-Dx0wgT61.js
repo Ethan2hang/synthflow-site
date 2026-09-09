@@ -1,0 +1,1 @@
+import{i as e,c as o,j as t,R as r,S as s}from"./prototype-BEDhfsKL.js";e(document.getElementById("root"),"/synthflow-site/");const n=new URLSearchParams(window.location.search).get("direction")==="b"?"b":"a";o.createRoot(document.getElementById("root")).render(t.jsx(r.StrictMode,{children:t.jsx(s,{direction:n})}));
