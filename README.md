@@ -1,41 +1,17 @@
-# SynthFlow — product site
+# SynthFlow product website
 
-Static landing page for SynthFlow. No build step: plain HTML, CSS and one ES
-module, same convention as `../frontend`.
+Compiled static build for https://ethan2hang.github.io/synthflow-site/.
+GitHub Pages serves the repository root on `main`; `.nojekyll` is intentional.
 
-```bash
-cd site
-python3 -m http.server 4400
-# -> http://localhost:4400
-```
+The homepage keeps the original static ivory sculpture and the accepted gold-sphere motion.
+Product routes: `/`, `/workflow/`, `/reference-audio/`, `/preview/`, beneath `/synthflow-site/`.
+The actual frontend preview remains at `/synthflow-site/interface/index.html`.
 
-On a Mac you can also just double-click `serve.command`. A server is
-required: the page loads `demo/catalog.json` and the audio files with
-`fetch`, which browsers block from `file://`.
+## Scope and provenance
 
-To re-render the demo audio with the real planner and engine (needs the
-repo, its `.venv`, and `ANTHROPIC_API_KEY`):
+This is a development demonstration, not a verified SynthFlow product release.
+The catalogue contains 48 prerecorded AAC assets and eight prompts with only two distinct displayed parameter recipes. A verified keyed render is still required before formal release.
+The page retains its exact offline-render disclosure, Audio provenance details, and backend/plugin availability boundaries.
+The source project retains the failing catalogue release gate; this static repository does not run or bypass it.
 
-```bash
-ANTHROPIC_API_KEY=sk-... .venv/bin/python backend/scripts/render_site_demo.py
-```
-
-What's in here:
-
-- `index.html` — the page. The hero is a guided demo of the product loop
-  (pick a sound → thinking / mapping / rendering → hear → refine → versions).
-- `site.css` — tokens follow `../frontend/css/styles.css` (White & Ink light,
-  neutral-grey dark; violet only on the primary action, focus and waveform).
-- `site.js` — plays the pre-rendered demo: loads `demo/catalog.json`, decodes
-  the audio, draws the waveform from the samples, Refine switches to the
-  pre-rendered branch and lists the parameter diff, Download saves a WAV.
-- `demo/` — `catalog.json` + audio rendered by `backend/scripts/render_site_demo.py`
-  (a copy of the script is in `scripts/` inside the zip). The current files
-  were rendered with the rule-based fallback planner; re-run with
-  `ANTHROPIC_API_KEY` for real results.
-
-Things still to fill in (search for `[` in `index.html`):
-
-- early-access form endpoint (`#cta-form` currently just explains it isn't wired)
-- GitHub and contact links in the footer
-- platform line in Specifications
+The repository contains compiled browser assets, the recorded catalogue, the frontend preview and its download package. It does not include the product backend, native plugin, API keys, node_modules or the React source project.

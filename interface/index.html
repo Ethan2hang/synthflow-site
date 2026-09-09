@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>SynthFlow — AI Preset Studio</title>
+  <script type="module" crossorigin src="./assets/index-DQporJhP.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-tIvtWheZ.css">
+</head>
+<body>
+<script>
+// Runs synchronously, before #app is painted, so there's no flash of an
+// unscaled reference-size box or the wrong theme. Recomputes scale on
+// resize too. See the big comment on .app in css/styles.css for why the
+// scaling exists instead of vw/vh sizing. An explicitly injected JUCE host
+// fact may instead select the approved adaptive-reference fill policy.
+(function () {
+  // 1280x800 is the design's natural size. Keep UI_SCALE at 1.00 for a
+  // uniform 100% UI; change only this value if another size is desired.
+  var REF_W = 1280, REF_H = 800;
+  var UI_SCALE = 1.00;
+  var BROWSER_LAYOUT_FACT = Object.freeze({
+    version: 1,
+    mode: "browser-contain",
+    revision: 0,
+    bounds: null
+  });
+  var layoutFact = BROWSER_LAYOUT_FACT;
+
+  function hostLayoutFact(value) {
+    var bounds = value && value.bounds;
+    if (!value || value.version !== 1 || value.mode !== "host-fill"
+      || !Number.isSafeInteger(value.revision) || value.revision < 0
+      || !bounds || !Number.isFinite(bounds.width) || bounds.width <= 0
+      || !Number.isFinite(bounds.height) || bounds.height <= 0) {
+      return null;
+    }
+    return Object.freeze({
+      version: 1,
+      mode: "host-fill",
+      revision: value.revision,
+      bounds: Object.freeze({ width: bounds.width, height: bounds.height })
+    });
+  }
+  // Host-fill is an opt-in mode established before first paint. A page that
+  // started as an ordinary browser cannot enter host mode later.
+  var hostLayoutEnabled = Boolean(hostLayoutFact(window.__SYNTHFLOW_HOST_LAYOUT__));
+
+  function applyScale() {
+    var rootStyle = document.documentElement.style;
+    var hostFact = hostLayoutEnabled
+      ? hostLayoutFact(window.__SYNTHFLOW_HOST_LAYOUT__)
+      : null;
+    var referenceWidth = REF_W;
+    var referenceHeight = REF_H;
+    var scale;
+    if (hostFact) {
+      // Explicit host mode uses the approved adaptive reference canvas. It
+      // fills without cover/max clipping by extending the layout dimension
+      // that needs more reference space.
+      var width = hostFact.bounds.width;
+      var height = hostFact.bounds.height;
+      var viewportAspect = width / height;
+      var designAspect = REF_W / REF_H;
+      if (viewportAspect >= designAspect) {
+        referenceWidth = REF_H * viewportAspect;
+      } else {
+        referenceHeight = REF_W / viewportAspect;
+      }
+      scale = width / referenceWidth;
+      layoutFact = hostFact;
+    } else {
+      // Browser mode remains the frozen contain fit: the complete 1280x800 UI
+      // is visible at every aspect ratio, with no host behavior inferred.
+      scale = Math.min(window.innerWidth / REF_W, window.innerHeight / REF_H) * UI_SCALE;
+      layoutFact = BROWSER_LAYOUT_FACT;
+    }
+    rootStyle.setProperty("--app-reference-width", referenceWidth + "px");
+    rootStyle.setProperty("--app-reference-height", referenceHeight + "px");
+    rootStyle.setProperty("--app-scale", scale);
+    return layoutFact;
+  }
+  window.__SYNTHFLOW_LAYOUT_RUNTIME__ = Object.freeze({
+    recalculate: applyScale,
+    readLayoutFact: function () { return layoutFact; }
+  });
+  applyScale();
+  window.addEventListener("resize", applyScale);
+
+  // theme: same localStorage key/shape app.js's prefs object uses. Missing or
+  // invalid values follow the device; explicit Light/Dark values keep their
+  // existing meaning.
+  var theme = "system";
+  try {
+    var raw = localStorage.getItem("ai_synth_frontend_prefs_v1");
+    var prefs = raw ? JSON.parse(raw) : null;
+    if (prefs && (prefs.theme === "light" || prefs.theme === "dark" || prefs.theme === "system")) {
+      theme = prefs.theme;
+    }
+  } catch (e) { /* unreadable storage keeps the System default */ }
+  var mediaMatches = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  var resolvedTheme = theme === "system" ? (mediaMatches ? "dark" : "light") : theme;
+  if (resolvedTheme === "dark") {
+    document.documentElement.setAttribute("data-theme", "dark");
+  }
+})();
+</script>
+<div id="app" class="app">
+
+  <!-- ============================== SIDEBAR ============================== -->
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <button id="account-btn" class="avatar-btn" title="Account &amp; settings" aria-label="Account">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="3.5"/>
+          <path d="M4.5 20c1.4-3.6 4.4-5.5 7.5-5.5s6.1 1.9 7.5 5.5"/>
+        </svg>
+      </button>
+        <span class="brand">SYNTHFLOW</span>
+      <span class="conn-dot" id="conn-dot" title="Backend connection"></span>
+    </div>
+
+    <button id="new-project-btn" class="btn-new-project" type="button" aria-label="New preset">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      <span class="btn-new-project-label">New preset</span>
+    </button>
+
+    <div class="project-list-wrap">
+      <div class="project-list" id="project-list"></div>
+    </div>
+
+    <div class="sidebar-bottom">
+      <button class="storage-mini" id="storage-mini" type="button" hidden>
+        <span class="storage-bar"><span class="storage-bar-fill" id="storage-bar-fill"></span></span>
+        <span id="storage-mini-text">Storage</span>
+      </button>
+    </div>
+  </aside>
+
+  <div id="project-rail-separator" class="project-rail-separator" role="separator" aria-label="Resize project rail" aria-orientation="vertical" aria-valuemin="180" aria-valuemax="320" aria-valuenow="236" tabindex="0"></div>
+
+  <!-- ============================== MAIN ============================== -->
+  <main class="main">
+
+    <!-- The original waveform/chat/composer shell is also the prompt-first
+         state. A project and session are created only after its first valid
+         submission; there is no separate name gate. -->
+    <div class="editor" id="editor" data-prompt-first="true">
+
+      <header class="editor-header">
+        <div class="editor-header-left">
+          <button id="project-rail-toggle" class="icon-btn project-rail-toggle" type="button" aria-label="Collapse project rail" aria-expanded="true" title="Collapse project rail">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 7-5 5 5 5"/></svg>
+          </button>
+          <div class="editor-title-wrap">
+            <h1 class="editor-title" id="editor-title">Untitled</h1>
+          </div>
+        </div>
+        <!-- Centered independently of the flanking clusters (absolute within
+             the header), so tabs appearing on project creation cannot shift
+             the left cluster. -->
+        <nav class="workspace-tabs" role="tablist" aria-label="Project view"></nav>
+        <div class="editor-actions">
+          <span class="engine-target-caption" id="engine-target-caption">New preset target</span>
+          <div class="engine-target-wrap" id="engine-target-wrap"></div>
+          <button id="appearance-shortcut" class="icon-btn" type="button" aria-label="Switch to Dark appearance" title="Switch to Dark appearance">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <g id="appearance-icon-sun" hidden><circle cx="12" cy="12" r="3.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g>
+              <path id="appearance-icon-moon" d="M20 15.2A8 8 0 0 1 8.8 4a8.2 8.2 0 1 0 11.2 11.2Z"/>
+            </svg>
+          </button>
+          <span class="divider-v"></span>
+          <div class="snapshot-cluster" id="snapshot-cluster">
+            <button class="icon-btn" id="undo-btn" title="Undo" aria-label="Undo" disabled>
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7 4 12l5 5M4 12h11a5 5 0 0 1 0 10h-1"/></svg>
+            </button>
+            <button class="icon-btn" id="redo-btn" title="Redo" aria-label="Redo" disabled>
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 7 5 5-5 5M20 12H9A5 5 0 0 0 9 22h1"/></svg>
+            </button>
+            <span class="divider-v"></span>
+            <button class="icon-btn" id="history-btn" title="Version history" aria-label="Version history">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5M12 8v4l3 2"/></svg>
+            </button>
+            <button class="icon-btn" id="params-btn" title="View parameters" aria-label="View parameters">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M8 6v0M4 12h16M14 12v0M4 18h16M10 18v0"/><circle cx="8" cy="6" r="2" fill="currentColor" stroke="none"/><circle cx="14" cy="12" r="2" fill="currentColor" stroke="none"/><circle cx="10" cy="18" r="2" fill="currentColor" stroke="none"/></svg>
+            </button>
+            <!-- CSS owns the 1200px collapse breakpoint; Vue owns the stable
+                 Inspect mount root and its menu-button behavior. -->
+            <div class="inspect-menu-wrap" id="inspect-menu-wrap"></div>
+          </div>
+        </div>
+      </header>
+
+      <div class="main-workspace" id="main-workspace" role="tabpanel" aria-labelledby="main-view-tab">
+
+      <div class="storage-banner" id="storage-banner" hidden>
+        <span id="storage-banner-text"></span>
+        <button class="btn-text" id="storage-banner-clean">Delete all renders</button>
+        <button class="icon-btn small" id="storage-banner-close" title="Dismiss">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+
+      <!-- ---- spectrum panel ---- -->
+      <section class="spectrum-panel" id="spectrum-panel"></section>
+
+      <!-- ---- chat thread ---- -->
+      <div class="chat-thread" id="chat-thread" tabindex="0" aria-label="Conversation history"></div>
+
+      <!-- ---- chat input bar ---- -->
+      <form class="chat-input-bar" id="chat-form"></form>
+      </div>
+
+      <!-- ---- dedicated synth workspace ---- -->
+      <section class="synth-workspace" id="synth-workspace" hidden role="tabpanel" aria-labelledby="synth-view-tab">
+        <div class="synth-toolbar">
+          <div class="synth-toolbar-title">
+            <span class="synth-live-dot"></span>
+            <strong id="synth-engine-title" tabindex="-1">Vital</strong>
+            <span id="synth-engine-subtitle">External synth target</span>
+          </div>
+          <div class="synth-preset-navigation" id="synth-preset-navigation" role="group" aria-label="Preset versions">
+            <div class="synth-preset-controls">
+              <button class="synth-preset-action" id="synth-preset-previous" type="button" aria-label="Previous preset" aria-describedby="synth-preset-explanation" disabled>Previous</button>
+              <span class="synth-preset-position" id="synth-preset-position" role="status" aria-live="polite">No saved presets</span>
+              <button class="synth-preset-action" id="synth-preset-next" type="button" aria-label="Next preset" aria-describedby="synth-preset-explanation" disabled>Next</button>
+            </div>
+            <span class="synth-preset-explanation" id="synth-preset-explanation">Create a preset to begin.</span>
+          </div>
+          <span class="synth-save-state" id="synth-save-state">Project engine</span>
+        </div>
+
+        <div class="synth-view external-synth-view" id="external-synth-view">
+          <div class="external-synth-shell">
+            <div class="external-synth-mark" id="external-synth-mark">V</div>
+            <p class="external-synth-eyebrow" id="external-synth-eyebrow">ACTIVE PRESET ENGINE</p>
+            <h2 id="external-synth-name">Vital</h2>
+            <p id="external-synth-description">Vital is selected for this project.</p>
+            <div class="external-plugin-status">
+              <span class="plugin-status-badge loading" id="external-plugin-badge">Checking…</span>
+              <code id="external-plugin-path">Plugin path unavailable</code>
+            </div>
+            <dl class="synth-facts" aria-label="Synth handoff status" aria-live="polite">
+              <div><dt>Preset</dt><dd id="synth-preset-status">No verified preset</dd></div>
+              <div><dt>Audio preview</dt><dd id="synth-audio-preview-status">External preview unavailable</dd></div>
+              <div><dt>Target engine</dt><dd id="synth-target-engine-status">Vital</dd></div>
+              <div><dt>Parameter compatibility</dt><dd id="synth-compatibility-status">Unknown</dd></div>
+              <div><dt>State applied</dt><dd id="synth-state-applied-status">No</dd></div>
+              <div><dt>Native load</dt><dd id="synth-native-load-status">Unavailable</dd></div>
+            </dl>
+            <div class="external-synth-note">
+              <strong>Native interface boundary</strong>
+              <span>Plugin control, engine-state loading, and external rendering are unavailable in this browser. A native host must explicitly acknowledge any future preset load.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ============================== OVERLAY + PANELS ============================== -->
+  <div class="overlay" id="overlay" hidden></div>
+
+  <!-- account and setup modal -->
+  <div class="modal" id="account-modal" hidden role="dialog" aria-modal="true" aria-label="Account &amp; Setup"></div>
+
+  <!-- params drawer -->
+  <aside class="drawer" id="params-drawer" hidden role="dialog" aria-modal="true" aria-label="Parameters"></aside>
+
+  <!-- history drawer -->
+  <aside class="drawer" id="history-drawer" hidden role="dialog" aria-modal="true" aria-label="Version history">
+  </aside>
+
+  <!-- generic confirm dialog (destructive actions outside chat) -->
+  <div class="confirm-dialog" id="confirm-dialog" hidden role="alertdialog" aria-modal="true" aria-label="Confirmation" aria-describedby="confirm-message">
+    <div class="confirm-card">
+      <p id="confirm-message">Are you sure?</p>
+      <div class="confirm-actions">
+        <button class="btn-ghost" id="confirm-cancel-btn">Cancel</button>
+        <button class="btn-danger" id="confirm-ok-btn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- toast -->
+  <div class="toast" id="toast" hidden></div>
+
+</div>
+</body>
+</html>
