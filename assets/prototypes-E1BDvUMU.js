@@ -1,0 +1,1 @@
+import{i as e,c as o,j as t,R as r,S as n}from"./prototype-CqRWtWu4.js";e(document.getElementById("root"),"/");const s=new URLSearchParams(window.location.search).get("direction")==="b"?"b":"a";o.createRoot(document.getElementById("root")).render(t.jsx(r.StrictMode,{children:t.jsx(n,{direction:s})}));

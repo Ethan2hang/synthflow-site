@@ -1,11 +1,12 @@
 # SynthFlow product website
 
-Compiled static build for https://ethan2hang.github.io/synthflow-site/.
+Compiled static build for https://astherlabs.com/.
 GitHub Pages serves the repository root on `main`; `.nojekyll` is intentional.
 
 The homepage keeps the original static ivory sculpture and the accepted gold-sphere motion.
-Product routes: `/`, `/workflow/`, `/reference-audio/`, `/preview/`, beneath `/synthflow-site/`.
-The actual frontend preview remains at `/synthflow-site/interface/index.html`.
+Product routes: `/`, `/workflow/`, `/reference-audio/`, `/preview/`, at the domain root.
+The actual frontend preview remains at `/interface/index.html`.
+Keep `CNAME` containing `astherlabs.com` when replacing the compiled files.
 
 ## Scope and provenance
 
