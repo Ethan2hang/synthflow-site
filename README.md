@@ -1,18 +1,7 @@
-# SynthFlow product website
+# Asther Labs — legacy website address
 
-Compiled static build for https://astherlabs.com/.
-GitHub Pages serves the repository root on `main`; `.nojekyll` is intentional.
+The public SynthFlow frontend preview is at https://astherlabs.ai/. This repository retains the astherlabs.com GitHub Pages domain and provides browser redirects to the new address, preserving paths, query strings and fragments. Known HTML routes also provide matching no-script fallback links.
 
-The homepage keeps the original static ivory sculpture and the accepted gold-sphere motion.
-Product routes: `/`, `/workflow/`, `/reference-audio/`, `/preview/`, at the domain root.
-The actual frontend preview remains at `/interface/index.html`.
-Keep `CNAME` containing `astherlabs.com` when replacing the compiled files.
+This repository contains compiled public artifacts only. Existing static assets remain available for older cached pages and direct links. Domain email forwarding is managed independently in Namecheap and is unchanged.
 
-## Scope and provenance
-
-This is a development demonstration, not a verified SynthFlow product release.
-The catalogue contains 48 prerecorded AAC assets and eight prompts with only two distinct displayed parameter recipes. A verified keyed render is still required before formal release.
-The page retains its exact offline-render disclosure, Audio provenance details, and backend/plugin availability boundaries.
-The source project retains the failing catalogue release gate; this static repository does not run or bypass it.
-
-The repository contains compiled browser assets, the recorded catalogue, the frontend preview and its download package. It does not include the product backend, native plugin, API keys, node_modules or the React source project.
+Future full-site builds belong in Ethan2hang/astherlabs-site; publish only the separate domain-redirect output here. The current frontend preview retains its recorded-audio provenance disclosure and unresolved formal catalogue gate.
